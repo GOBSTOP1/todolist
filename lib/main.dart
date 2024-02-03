@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/routes/routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todolist/Service/routes/routes.dart';
 import 'package:todolist/themes/theme.dart';
 
-void main(){
-  runApp(MyApp());
+import 'themes/bloc/theme_bloc.dart';
+
+void main() async {
+  await Hive.initFlutter();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -11,11 +16,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: routes,
-      initialRoute: '/',
-      theme: currentTheme,
-      
+    return BlocProvider(
+      create: (context) => ThemeBloc(),
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            routes: routes,
+            initialRoute: '/',
+            theme: state.themeData,
+          );
+        },
+      ),
     );
   }
 }
