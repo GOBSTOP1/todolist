@@ -17,10 +17,10 @@ class TaskAdapter extends TypeAdapter<Task> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Task(
-      id: fields[0] as String,
-      name: fields[1] as String,
-      description: fields[2] as String,
-      succes: fields[3] as bool,
+      name: fields[0] as String,
+      description: fields[1] as String,
+      succes: fields[2] as bool,
+      id: fields[3] == null ? 1337 : fields[3] as int,
     );
   }
 
@@ -29,13 +29,13 @@ class TaskAdapter extends TypeAdapter<Task> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
       ..write(obj.name)
-      ..writeByte(2)
+      ..writeByte(1)
       ..write(obj.description)
+      ..writeByte(2)
+      ..write(obj.succes)
       ..writeByte(3)
-      ..write(obj.succes);
+      ..write(obj.id);
   }
 
   @override
