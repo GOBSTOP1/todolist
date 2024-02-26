@@ -1,7 +1,5 @@
-
-
 import 'package:bloc/bloc.dart';
-import 'package:todolist/repositories/taskRepository.dart';
+import '../../../repositories/taskExport.dart';
 
 part 'task_list_bloc_event.dart';
 part 'task_list_bloc_state.dart';
@@ -24,7 +22,7 @@ class TaskBloc extends Bloc<TaskHiveBlocEvent, TaskState> {
    });
   }
  
-  final TaskRepository taskRepository;
+  final AbstractTaskRepository taskRepository;
 
  
 }

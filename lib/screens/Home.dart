@@ -1,9 +1,12 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todolist/Service/Hive/bloc/task_hive_bloc_bloc.dart';
-import 'package:todolist/Service/themes/bloc/theme_bloc.dart';
-import 'package:todolist/models/task.dart';
-import 'package:todolist/repositories/taskRepository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:todolist/repositories/taskExport.dart';
+
+import '../Service/bloc/Home_Bloc/task_List_bloc.dart';
+import '../Service/themes/bloc/theme_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,7 +18,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final TextEditingController textEditingController = TextEditingController();
   final taskBloc = TaskBloc(
-    TaskRepository(),
+    GetIt.I<AbstractTaskRepository>(),
   );
 
   @override
@@ -37,7 +40,7 @@ class _HomeState extends State<Home> {
       child: BlocListener<TaskBloc, TaskState>(
         listener: (context, state) {
           if(state is TaskCreate){
-            TaskRepository().createTaskDialog(
+           GetIt.I<AbstractTaskRepository>().createTaskDialog(
                 context,
                 textEditingController,
               );
@@ -60,22 +63,22 @@ class _HomeState extends State<Home> {
                   onPressed: () async {
                     taskBloc.add(TaskDeleteBox());
                   },
-                  icon: const Icon(Icons.delete))
+                  icon: Icon(Icons.delete))
             ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               taskBloc.add(TaskCreating());
             },
-            child: const Icon(Icons.add),
+            child: Icon(Icons.add),
           ),
           body: BlocBuilder<TaskBloc, TaskState>(
             bloc: taskBloc,
             builder: (context, state) {
               if (state is TaskListLoaded) {
                 return ListView.separated(
-                    padding: const EdgeInsets.only(top: 16),
-                    separatorBuilder: (context, index) => const Divider(),
+                    padding: EdgeInsets.only(top: 16),
+                    separatorBuilder: (context, index) => Divider(),
                     itemCount: state.taskList.length,
                     itemBuilder: (context, index) {
                       Task task = state.taskList[index];
@@ -83,11 +86,11 @@ class _HomeState extends State<Home> {
                         title: Text(task.name),
                         subtitle: Text(task.description),
                         leading: Text(task.id.toString()),
-                        trailing: (task.succes ? const Text('da') : const Text('net')),
+                        trailing: (task.succes ? Text('da') : Text('net')),
                       );
                     });
               } else {
-                return const Center(
+                return Center(
                   child: CircularProgressIndicator(
                     color: Colors.green,
                   ),

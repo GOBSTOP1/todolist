@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todolist/Service/Hive/bloc/bloc/task_create_bloc.dart';
-import 'package:todolist/repositories/taskRepository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:todolist/Service/bloc/CreateTask_Bloc/task_create_bloc.dart';
+import 'package:todolist/repositories/TaskExport.dart';
+
 
 import 'widgets/createTaskWidget.dart';
 
@@ -22,7 +24,7 @@ class _CreateTaskState extends State<CreateTask> {
   int? id;
   @override
   void initState() {
-    int response = TaskRepository().getId();
+    int response = GetIt.I<AbstractTaskRepository>().getId();
     id = response;
     super.initState();
   }
@@ -43,7 +45,7 @@ class _CreateTaskState extends State<CreateTask> {
   @override
   Widget build(BuildContext context) {
     final taskCreateBloc =
-        TaskCreateBloc(TaskRepository(), name!, description, id!);
+        TaskCreateBloc(GetIt.I<AbstractTaskRepository>(), name!, description, id!);
     return BlocProvider.value(
       value: taskCreateBloc,
       child: BlocListener<TaskCreateBloc, TaskCreateState>(

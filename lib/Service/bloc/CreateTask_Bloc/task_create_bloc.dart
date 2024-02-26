@@ -1,5 +1,7 @@
-import 'package:bloc/bloc.dart';
-import 'package:todolist/repositories/taskRepository.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todolist/repositories/abstractTaskRepository.dart';
+
 
 part 'task_create_event.dart';
 part 'task_create_state.dart';
@@ -21,5 +23,5 @@ class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateState> {
   final int id;
   final String name;
   final String description;
-  final TaskRepository taskRepository;
+  final AbstractTaskRepository taskRepository;
 }

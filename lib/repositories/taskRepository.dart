@@ -1,8 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todolist/models/task.dart';
+import 'package:todolist/repositories/taskExport.dart';
 
-class TaskRepository {
+class TaskRepository implements AbstractTaskRepository{
+  @override
   Future<List<Task>> getTasks() async {
     try {
       var box = Hive.box<Task>('todoBox');
@@ -14,6 +16,7 @@ class TaskRepository {
       return [];
     }
   }
+  @override
   bool deleteBox(){
     try{
       var box = Hive.box<Task>('todoBox');
@@ -24,6 +27,7 @@ class TaskRepository {
       return false;
     }
   }
+  @override
   Future<void> createTask(String name, String description, int id) async {
     try{
       var box = Hive.box<Task>('todoBox');
@@ -34,6 +38,7 @@ class TaskRepository {
       print('мослину поймал в taskrepository createtask $e');
     }
   }
+  @override
   Future<void> createTaskDialog(
     BuildContext context,
     TextEditingController textEditingController,
@@ -42,10 +47,10 @@ class TaskRepository {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Новая заметка'),
+            title: Text('Новая заметка'),
             content: TextField(
               controller: textEditingController,
-              decoration: const InputDecoration(hintText: 'Введите название заметки'),
+              decoration: InputDecoration(hintText: 'Введите название заметки'),
               maxLines: null,
             ),
             actions: <Widget>[
@@ -54,20 +59,21 @@ class TaskRepository {
                 children: [
                   ElevatedButton(onPressed: () {
                     Navigator.pop(context);
-                  }, child: const Text('Отмена')),
+                  }, child: Text('Отмена')),
                   ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(context, '/createTask', (route) => false,
                             arguments: textEditingController);
                             
                       },
-                      child: const Text('Создать')),
+                      child: Text('Создать')),
                 ],
               ),
             ],
           );
         });
   }
+  @override
   int getId() {
     try{
     var box =  Hive.box<Task>('todoBox');  
