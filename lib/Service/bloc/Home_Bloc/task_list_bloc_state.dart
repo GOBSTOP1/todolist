@@ -1,23 +1,23 @@
 part of 'task_List_bloc.dart';
 
-abstract class TaskState {
+abstract class TaskListState {
 
 }
 
-class TaskHiveBlocInitial extends TaskState {
+class TaskListInitial extends TaskListState {
   
 }
-class TaskListLoading extends TaskState{
+class TaskListLoading extends TaskListState{
 
 }
-class TaskListLoaded extends TaskState{
+class TaskListLoaded extends TaskListState{
   final List<Task> taskList;
 
   TaskListLoaded({required this.taskList});
 }
-class TaskBoxDeleted extends TaskState{
+class TaskBoxDeleted extends TaskListState{
 
 }
-class TaskCreate extends TaskState{
+class TaskCreate extends TaskListState{
   
 }

@@ -1,14 +1,16 @@
 part of 'task_List_bloc.dart';
 
-abstract class TaskHiveBlocEvent {}
+abstract class TaskListEvent {}
 
-class LoadTaskList extends TaskHiveBlocEvent{
+
+
+class LoadTaskList extends TaskListEvent{
   
 }
 
-class TaskDeleteBox extends TaskHiveBlocEvent{
+class TaskDeleteBox extends TaskListEvent{
   
 }
-class TaskCreating extends TaskHiveBlocEvent{
+class TaskCreating extends TaskListEvent{
   
 }

@@ -1,22 +1,36 @@
   part of 'theme_bloc.dart';
 
   abstract class ThemeState {
-    ThemeData themeData = light;
+    late ThemeData currentTheme = AppThemes.lightTheme;
      
   }
-  class ThemeLight extends ThemeState{
-   @override
-  late final ThemeData themeData;
-    ThemeLight(this.themeData);
+  class ThemeCurrent extends ThemeState{
+  @override
+  late final ThemeData currentTheme;
 
-
-     
-  }
-  class ThemeDark extends ThemeState{
-   @override
-  late final ThemeData themeData;
-    ThemeDark(this.themeData);
+  ThemeCurrent(this.currentTheme);
     
+  }
+
+  Future<ThemeData> getTheme() async {
+   var box = await Hive.openBox('theme');
+
+    var currentTheme =  box.get('current');
+    if(currentTheme ==  'light'){
+      return AppThemes.lightTheme;
+    } else if(currentTheme ==  'dark'){
+      return AppThemes.darkTheme;
+    } else {
+      return  AppThemes.darkTheme;
+    }
+  }
+  void setDark() async{
+    var box = await Hive.openBox('theme');
+    await box.put('current', 'dark' );
+  }
+  void setLight() async{
+    var box = await Hive.openBox('theme');
+    await box.put('current', 'light' );
   }
 // Future<ThemeData> getTheme()async{
 //   final SharedPreferences prefs = await SharedPreferences.getInstance();

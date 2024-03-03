@@ -1,23 +1,26 @@
 
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:todolist/Service/routes/router.dart';
+import 'package:todolist/Service/themes/theme.dart';
 import 'package:todolist/repositories/taskExport.dart';
 
 import '../Service/bloc/Home_Bloc/task_List_bloc.dart';
 import '../Service/themes/bloc/theme_bloc.dart';
-
-class Home extends StatefulWidget {
-  const Home({super.key});
+@RoutePage() 
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<HomeScreen> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<HomeScreen> {
   final TextEditingController textEditingController = TextEditingController();
-  final taskBloc = TaskBloc(
+  final taskBloc = TaskListBloc(
     GetIt.I<AbstractTaskRepository>(),
   );
 
@@ -37,7 +40,7 @@ class _HomeState extends State<Home> {
         ),
         BlocProvider(create: (context) => taskBloc)
       ],
-      child: BlocListener<TaskBloc, TaskState>(
+      child: BlocListener<TaskListBloc, TaskListState>(
         listener: (context, state) {
           if(state is TaskCreate){
            GetIt.I<AbstractTaskRepository>().createTaskDialog(
@@ -51,8 +54,8 @@ class _HomeState extends State<Home> {
             title: const Text('Список дел'),
             actions: [
               IconButton(
-                  onPressed: () {
-                    if (theme.state is ThemeLight) {
+                  onPressed: () async {
+                    if (theme.state.currentTheme == AppThemes.lightTheme) {
                       theme.add(darkThemeEvent());
                     } else {
                       theme.add(lightThemeEvent());
@@ -63,34 +66,36 @@ class _HomeState extends State<Home> {
                   onPressed: () async {
                     taskBloc.add(TaskDeleteBox());
                   },
-                  icon: Icon(Icons.delete))
+                  icon: const Icon(Icons.delete))
             ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               taskBloc.add(TaskCreating());
             },
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
-          body: BlocBuilder<TaskBloc, TaskState>(
+          body: BlocBuilder<TaskListBloc, TaskListState>(
             bloc: taskBloc,
             builder: (context, state) {
               if (state is TaskListLoaded) {
                 return ListView.separated(
-                    padding: EdgeInsets.only(top: 16),
-                    separatorBuilder: (context, index) => Divider(),
+                    padding: const EdgeInsets.only(top: 16),
+                    separatorBuilder: (context, index) => const Divider(),
                     itemCount: state.taskList.length,
                     itemBuilder: (context, index) {
-                      Task task = state.taskList[index];
+                      
+                    final task = state.taskList[index];
                       return ListTile(
+                        onTap: ()=> AutoRouter.of(context).pushAndPopUntil(TaskInfoRoute(task: task),predicate: (route) => false),
                         title: Text(task.name),
                         subtitle: Text(task.description),
                         leading: Text(task.id.toString()),
-                        trailing: (task.succes ? Text('da') : Text('net')),
+                        trailing: (task.succes ? const Text('da') : const Text('net')),
                       );
                     });
               } else {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(
                     color: Colors.green,
                   ),

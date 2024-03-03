@@ -4,8 +4,8 @@ import '../../../repositories/taskExport.dart';
 part 'task_list_bloc_event.dart';
 part 'task_list_bloc_state.dart';
 
-class TaskBloc extends Bloc<TaskHiveBlocEvent, TaskState> {
-  TaskBloc(this.taskRepository,) : super(TaskHiveBlocInitial()) {
+class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
+  TaskListBloc(this.taskRepository,) : super(TaskListInitial()) {
     on<LoadTaskList>((event, emit) async {
       final taskList = await taskRepository.getTasks();
       emit(TaskListLoaded(taskList: taskList));

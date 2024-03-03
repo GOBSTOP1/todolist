@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:todolist/Service/routes/router.dart';
 
 class NewWidget extends StatelessWidget {
   
@@ -12,17 +14,26 @@ class NewWidget extends StatelessWidget {
       title: const Text('Изменения не сохранены'),
       content: const Text('Вы уверены что хотите выйти?'),
       actions: <Widget>[
-        TextButton(onPressed: (){
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-        }, child: const Text('Выйти')),
-        TextButton(onPressed: (){
-          
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-          
-        }, child: const Text('')),
-        TextButton(onPressed: (){
-          Navigator.pop(context, true);
-        }, child: const Text('Остаться')),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: TextButton(onPressed: (){
+            // Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            AutoRouter.of(context).pushAndPopUntil(const HomeRoute(), predicate: (route)=> false);
+                    }, child: const Text('Выйти')),
+          ),
+        Padding(
+            padding: const EdgeInsets.only(right: 12),
+          child: TextButton(onPressed: (){
+            // Navigator.pop(context, true);
+            AutoRouter.of(context).pop(true);
+          }, child: const Text('Остаться')),
+        ),
+          ],
+        )
+       
       ],
     );
   }

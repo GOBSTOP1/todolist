@@ -7,21 +7,24 @@ part 'task_create_event.dart';
 part 'task_create_state.dart';
 
 class TaskCreateBloc extends Bloc<TaskCreateEvent, TaskCreateState> {
-  TaskCreateBloc(this.taskRepository, this.name, this.description, this.id,) : super(TaskCreateInitial()) {
+  TaskCreateBloc(this.taskRepository,) : super(TaskCreateInitial()) {
     on<TaskCreatingEvent>((event, emit) async {
-     await taskRepository.createTask(name, description, id);
+     await taskRepository.createTask(event.name, event.description, event.id);
+     int id = taskRepository.getId();
      emit(TaskCreated());
+     emit(TaskIdReceived(id: id));
     });
     on<TaskGetId>((event,emit)async{
-      taskRepository.getId();
+      int id = taskRepository.getId();
       emit(TaskIdReceived(id: id));
     });
     on<TaskExit>((event,emit){
+      int id = taskRepository.getId();
       emit(TaskExiting());
+      emit(TaskIdReceived(id: id));
     });
   }
-  final int id;
-  final String name;
-  final String description;
+  
+
   final AbstractTaskRepository taskRepository;
 }

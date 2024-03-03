@@ -1,6 +1,8 @@
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todolist/Service/routes/router.dart';
 import 'package:todolist/repositories/taskExport.dart';
 
 class TaskRepository implements AbstractTaskRepository{
@@ -15,6 +17,18 @@ class TaskRepository implements AbstractTaskRepository{
       print(e);
       return [];
     }
+  }
+
+  @override
+  Future<Task?> getTask(int id) async {
+    try{
+      var box = Hive.box<Task>('todoBoX');
+      final Task? task = box.get(id);
+      print('niggersRabotat');
+      return task;
+    } catch(e){
+    }
+    return null;
   }
   @override
   bool deleteBox(){
@@ -47,10 +61,10 @@ class TaskRepository implements AbstractTaskRepository{
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Новая заметка'),
+            title: const Text('Новая заметка'),
             content: TextField(
               controller: textEditingController,
-              decoration: InputDecoration(hintText: 'Введите название заметки'),
+              decoration: const InputDecoration(hintText: 'Введите название заметки'),
               maxLines: null,
             ),
             actions: <Widget>[
@@ -58,15 +72,16 @@ class TaskRepository implements AbstractTaskRepository{
                 alignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(onPressed: () {
-                    Navigator.pop(context);
-                  }, child: Text('Отмена')),
+                    AutoRouter.of(context).pop();
+                  }, child: const Text('Отмена')),
                   ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(context, '/createTask', (route) => false,
-                            arguments: textEditingController);
+                        // Navigator.pushNamedAndRemoveUntil(context, '/createTask', (route) => false,
+                        //     arguments: textEditingController);
+                        AutoRouter.of(context).pushAndPopUntil(CreateTaskRoute(name: textEditingController.text,), predicate: (route) => false);
                             
                       },
-                      child: Text('Создать')),
+                      child: const Text('Создать')),
                 ],
               ),
             ],
